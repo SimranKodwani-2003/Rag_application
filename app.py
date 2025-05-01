@@ -10,9 +10,9 @@ from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.docstore.in_memory import InMemoryDocstore
 from langchain.chains import RetrievalQA
 from langchain_huggingface import HuggingFaceEndpoint
-from secret_api_keys import Rag_QA
+# from secret_api_keys import Rag_QA
 
-os.environ['HUGGINGFACEHUB_API_TOKEN'] = Rag_QA
+# os.environ['HUGGINGFACEHUB_API_TOKEN'] = Rag_QA
 
 def process_input(input_type, input_data):
     if input_type == "Link":
