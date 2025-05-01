@@ -3,16 +3,14 @@ import os
 from io import BytesIO
 from docx import Document
 from PyPDF2 import PdfReader
+
 from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.docstore.in_memory import InMemoryDocstore
 from langchain.chains import RetrievalQA
-from langchain_huggingface import HuggingFaceEndpoint
-# from secret_api_keys import Rag_QA
-
-# os.environ['HUGGINGFACEHUB_API_TOKEN'] = Rag_QA
+from langchain.llms import HuggingFaceHub  # ✅ use this instead
 
 def process_input(input_type, input_data):
     if input_type == "Link":
@@ -41,13 +39,13 @@ def process_input(input_type, input_data):
     return vectorstore
 
 def answer_question(vectorstore, query):
-    llm = HuggingFaceEndpoint(
-    repo_id="microsoft/Phi-3-mini-128k-instruct", 
-    huggingfacehub_api_token=os.environ["HUGGINGFACEHUB_API_TOKEN"]
-)
-    #     temperature=0.7,
-    #     task="text-generation"
-    # )
+    # ✅ Use HuggingFaceHub, not HuggingFaceEndpoint
+    llm = HuggingFaceHub(
+        repo_id="google/flan-t5-large",  # ✅ Use a model that's fully compatible with langchain
+        model_kwargs={"temperature": 0.5, "max_length": 512},
+        huggingfacehub_api_token=os.environ.get("HUGGINGFACEHUB_API_TOKEN")
+    )
+
     qa = RetrievalQA.from_chain_type(llm=llm, retriever=vectorstore.as_retriever())
     return qa.invoke({"query": query})
 
@@ -56,9 +54,8 @@ def main():
     input_type = st.selectbox("Input Type", ["Link", "PDF", "Text", "DOCX", "TXT"])
 
     if input_type == "Link":
-        number_input = st.number_input("Number of Links", min_value=1, max_value=20, step=1)
-        urls = [st.text_input(f"URL {i+1}") for i in range(number_input)]
-        input_data = urls
+        url = st.text_input("Enter URL")
+        input_data = url
     elif input_type == "Text":
         input_data = st.text_area("Enter your text")
     else:
