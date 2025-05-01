@@ -1,6 +1,6 @@
 langchain
 numpy
-gradio
+os
 streamlit
 langchain-community
 streamlit
