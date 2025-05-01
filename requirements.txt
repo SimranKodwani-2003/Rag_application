@@ -1,8 +1,6 @@
 numpy
-os
 streamlit
 langchain-community
-streamlit
 PyPDF2
 unstructured
 nltk
