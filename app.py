@@ -1,5 +1,5 @@
 import streamlit as st
-import os
+# import os
 from io import BytesIO
 from docx import Document
 from PyPDF2 import PdfReader
@@ -12,7 +12,7 @@ from langchain.chains import RetrievalQA
 from langchain_huggingface import HuggingFaceEndpoint
 # from secret_api_keys import Rag_QA
 
-os.environ['HUGGINGFACEHUB_API_TOKEN'] = Rag_QA
+# os.environ['HUGGINGFACEHUB_API_TOKEN'] = Rag_QA
 
 def process_input(input_type, input_data):
     if input_type == "Link":
@@ -44,7 +44,7 @@ def answer_question(vectorstore, query):
     llm = HuggingFaceEndpoint(
         repo_id='microsoft/Phi-3.5-mini-instruct',
         token=Rag_QA,
-        temperature=0.6,
+        temperature=0.7,
         task="text-generation"
     )
     qa = RetrievalQA.from_chain_type(llm=llm, retriever=vectorstore.as_retriever())
