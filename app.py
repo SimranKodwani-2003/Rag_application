@@ -42,7 +42,7 @@ def process_input(input_type, input_data):
 
 def answer_question(vectorstore, query):
     llm = HuggingFaceEndpoint(
-        repo_id='microsoft/Phi-3.5-mini-instruct',
+        repo_id='google/flan-t5-small',
         token=Rag_QA,
         temperature=0.7,
         task="text-generation"
